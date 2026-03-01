@@ -17,6 +17,7 @@ export default function SearchBar({
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isDirty, setIsDirty] = useState(false); // New state to prevent auto-open
   const router = useRouter();
   const tr = t(lang);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -24,7 +25,7 @@ export default function SearchBar({
   // Debounce search
   useEffect(() => {
     const timer = setTimeout(async () => {
-      if (q.trim().length >= 2) {
+      if (q.trim().length >= 2 && isDirty) { // Only fetch if user typed
         setLoading(true);
         try {
           const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
@@ -45,7 +46,7 @@ export default function SearchBar({
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [q]);
+  }, [q, isDirty]);
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -77,8 +78,11 @@ export default function SearchBar({
       >
         <input
           value={q}
-          onFocus={() => q.length >= 2 && setShowDropdown(true)}
-          onChange={(e) => setQ(e.target.value)}
+          onFocus={() => q.length >= 2 && isDirty && setShowDropdown(true)}
+          onChange={(e) => {
+            setQ(e.target.value);
+            setIsDirty(true);
+          }}
           placeholder={tr.searchPlaceholder}
           className="w-full flex-1 rounded-2xl glass px-4 py-3 outline-none placeholder:text-white/45 focus:border-white/25"
         />
