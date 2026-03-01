@@ -4,6 +4,16 @@ import "./globals.css";
 export const metadata = {
   title: "Weather Glass",
   description: "7-day forecast with premium glassmorphism design",
+  themeColor: "#000000",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
+  appleWebApp: {
+    title: "Weather Glass",
+    statusBarStyle: "black-translucent",
+    capable: true,
+  },
+  icons: {
+    apple: "/icon-192.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
