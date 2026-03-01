@@ -51,13 +51,18 @@ export default function LanguageClientWrapper({ initialLang }: { initialLang: La
     const last = localStorage.getItem("last_city");
     
     const startDiscovery = async () => {
+      const DEFAULT_CITY = "Cairo";
+      const DEFAULT_COUNTRY = "Egypt";
+
       // If we have a last city, show it immediately while we try to get location
       if (last) {
         fetchWeatherForCities([last]);
+      } else {
+        // Initial fallback if no last city and waiting for geo
+        fetchWeatherForCities(getNearbyCities(DEFAULT_COUNTRY, DEFAULT_CITY));
       }
 
       if (!navigator.geolocation) {
-        if (!last) setLocLoading(false);
         return;
       }
 
@@ -73,13 +78,13 @@ export default function LanguageClientWrapper({ initialLang }: { initialLang: La
             const citiesToFetch = getNearbyCities(country, city);
             fetchWeatherForCities(citiesToFetch);
           } catch {
-            if (!last) setLocLoading(false);
+            // If reverse fails, we already have the fallback from above or 'last'
           }
         },
         () => {
-          if (!last) setLocLoading(false);
+          // Denied or error - fallback already handled by the start of the function
         },
-        { enableHighAccuracy: false, timeout: 8000 }
+        { enableHighAccuracy: false, timeout: 5000 }
       );
     };
 

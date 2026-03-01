@@ -23,12 +23,6 @@ export default function Adsense({ slot }: { slot: string }) {
 
   return (
     <>
-      <Script
-        async
-        strategy="afterInteractive"
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${client}`}
-        crossOrigin="anonymous"
-      />
       <ins
         className="adsbygoogle block"
         style={{ display: "block" }}
