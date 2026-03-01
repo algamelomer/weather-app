@@ -158,5 +158,17 @@ export default async function CityPage({
         </div>
       </div>
     </main>
-  );
+    );
+  } catch (err) {
+    return (
+      <main dir={dir} className="min-h-screen grid place-items-center px-6">
+        <div className="max-w-lg rounded-3xl glass p-8 text-center">
+          <div className="text-2xl font-extrabold">{tr.notFound}</div>
+          <p className="mt-2 text-white/70">
+            {lang === "ar" ? "حدث خطأ أثناء تحميل البيانات." : "Something went wrong loading weather data."}
+          </p>
+        </div>
+      </main>
+    );
+  }
 }
