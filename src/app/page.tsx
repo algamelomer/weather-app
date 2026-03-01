@@ -1,5 +1,27 @@
 import { normalizeLang, dirForLang, t } from "@/lib/i18n";
 import LanguageClientWrapper from "@/app/ui/LanguageClientWrapper";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ lang?: string }>;
+}): Promise<Metadata> {
+  const sp = await searchParams;
+  const lang = normalizeLang(sp.lang);
+  const tr = t(lang);
+
+  return {
+    title: `${tr.appTitle} • ${tr.tagline}`,
+    description: tr.metaDescription,
+    keywords: tr.keywords,
+    openGraph: {
+      title: tr.appTitle,
+      description: tr.metaDescription,
+      type: "website",
+    },
+  };
+}
 
 export default async function Home({
   searchParams,

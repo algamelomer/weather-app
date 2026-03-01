@@ -32,17 +32,24 @@ export async function generateMetadata({
   const titleCity = q || (lang === "ar" ? "مدينة" : "City");
   const tr = t(lang);
 
+  const desc = lang === "ar"
+    ? `احصل على توقعات طقس دقيقة لمدة 7 أيام لـ ${titleCity}. تشمل درجة الحرارة والرياح والرطوبة مع خلفيات سينمائية.`
+    : `Get accurate 7-day weather forecast for ${titleCity}. Includes temperature, wind, and humidity with cinematic backgrounds.`;
+
   return {
     title: `${tr.appTitle} • ${titleCity}`,
-    description:
-      lang === "ar"
-        ? `توقعات الطقس لمدة 7 أيام لـ ${titleCity}`
-        : `7-day weather forecast for ${titleCity}`,
+    description: desc,
+    keywords: `${tr.keywords}, ${titleCity}, weather in ${titleCity}`,
     alternates: {
       languages: {
         en: `?lang=en&q=${encodeURIComponent(q)}`,
         ar: `?lang=ar&q=${encodeURIComponent(q)}`,
       },
+    },
+    openGraph: {
+      title: `${tr.appTitle} • ${titleCity}`,
+      description: desc,
+      type: "website",
     },
   };
 }

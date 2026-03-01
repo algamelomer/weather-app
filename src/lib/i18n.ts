@@ -25,5 +25,11 @@ export function t(lang: Lang) {
     adLabel: isAr ? "إعلان" : "Ad",
     notFound: isAr ? "المدينة غير موجودة" : "City not found",
     openCityPage: isAr ? "افتح صفحة المدينة" : "Open city page",
+    metaDescription: isAr 
+      ? "توقعات الطقس لمدة 7 أيام مع خلفيات صور سينمائية جميلة. ابحث عن أي مدينة واحصل على حالة الطقس الحالية والتوقعات الأسبوعية."
+      : "7-day weather forecast with beautiful cinematic photo backgrounds. Search any city and get current weather and weekly forecasts.",
+    keywords: isAr
+      ? "طقس, توقعات الطقس, طقس اليوم, درجة الحرارة, رياح, رطوبة, خرائط الطقس"
+      : "weather, forecast, weather today, temperature, wind, humidity, weather maps, weather forecast 7 days",
   };
 }
