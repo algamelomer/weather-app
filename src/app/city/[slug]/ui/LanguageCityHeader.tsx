@@ -25,7 +25,7 @@ export default function LanguageCityHeader({ lang, q }: { lang: Lang; q: string 
         />
       </div>
 
-      <SearchBar initial={q} lang={lang} />
+      <SearchBar initial="" lang={lang} />
     </div>
   );
 }

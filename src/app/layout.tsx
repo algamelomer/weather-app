@@ -3,6 +3,9 @@ import "./globals.css";
 export const metadata = {
   title: "Weather Glass",
   description: "7-day forecast with premium glassmorphism design",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
