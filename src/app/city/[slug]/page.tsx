@@ -9,15 +9,7 @@ import {
 import ForecastCards from "@/app/components/ForecastCards";
 import Adsense from "@/app/components/Adsense";
 import LanguageCityHeader from "./ui/LanguageCityHeader";
-
-async function fetchWeather(q: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/weather?q=${encodeURIComponent(q)}`, {
-    cache: "no-store",
-  });
-  if (!res.ok) throw new Error("Weather fetch failed");
-  return res.json();
-}
+import { getWeather, getPhotos } from "@/lib/api";
 
 export async function generateMetadata({
   searchParams,
@@ -82,31 +74,27 @@ export default async function CityPage({
     );
   }
 
-  const data = await fetchWeather(q);
+  try {
+    const data = await getWeather(q);
+    const desc = codeToDesc(data.current.code, lang);
+    const emoji = weatherToEmoji(data.current.code);
+    const photoQuery = `${desc} cinematic city, ${data.place}`;
 
-  const desc = codeToDesc(data.current.code, lang);
-  const emoji = weatherToEmoji(data.current.code);
-  const bgQ = backgroundQuery(desc, data.place);
+    let bgUrl = "https://images.pexels.com/photos/290275/pexels-photo-290275.jpeg";
+    try {
+      const photo = await getPhotos(photoQuery);
+      bgUrl = photo.url;
+    } catch (err) {
+      console.error("City photo fetch failed", err);
+    }
 
-  const photoQuery = `${desc} cinematic city, ${data.place}`;
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const photoRes = await fetch(
-    `${baseUrl}/api/photos?q=${encodeURIComponent(photoQuery)}`,
-    { cache: "no-store" },
-  );
-
-  // Fallback for local/dev where NEXT_PUBLIC_SITE_URL isn't set:
-  const photo = photoRes.ok ? await photoRes.json() : null;
-  const bgUrl =
-    photo?.url ||
-    "https://images.pexels.com/photos/290275/pexels-photo-290275.jpeg";
-  return (
-    <main dir={dir} className="relative min-h-screen overflow-hidden">
-      {/* Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center scale-[1.02]"
-        style={{ backgroundImage: `url(${bgUrl})` }}
-      />
+    return (
+      <main dir={dir} className="relative min-h-screen overflow-hidden">
+        {/* Background */}
+        <div
+          className="absolute inset-0 bg-cover bg-center scale-[1.02]"
+          style={{ backgroundImage: `url(${bgUrl})` }}
+        />
       <div className="absolute inset-0 bg-black/65" />
       <div className="absolute inset-0 bg-grain" />
 

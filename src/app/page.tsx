@@ -1,6 +1,7 @@
 import { normalizeLang, dirForLang, t } from "@/lib/i18n";
 import LanguageClientWrapper from "@/app/ui/LanguageClientWrapper";
 import type { Metadata } from "next";
+import { getPhotos } from "@/lib/api";
 
 export async function generateMetadata({
   searchParams,
@@ -33,13 +34,13 @@ export default async function Home({
   const tr = t(lang);
   const dir = dirForLang(lang);
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const photoRes = await fetch(
-    `${baseUrl}/api/photos?q=scenic cityscape`,
-    { cache: "no-store" }
-  );
-  const photo = photoRes.ok ? await photoRes.json() : null;
-  const bgUrl = photo?.url || "https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg";
+  let bgUrl = "https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg";
+  try {
+    const photo = await getPhotos("scenic cityscape");
+    bgUrl = photo.url;
+  } catch (err) {
+    console.error("Home bg fetch failed", err);
+  }
 
   return (
     <main dir={dir} className="relative min-h-screen overflow-hidden">
